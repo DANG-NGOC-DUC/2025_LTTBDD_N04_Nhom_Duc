@@ -9,7 +9,7 @@ import 'screens/reports/report_screen.dart';
 import 'screens/settings/settings_screen.dart';
 
 final Map<String, WidgetBuilder> appRoutes = {
-  '/': (context) => const HomeScreen(),
+  '/home': (context) => const HomeScreen(),
   '/login': (context) => const LoginScreen(),
   '/register': (context) => const RegisterScreen(),
   '/transactions': (context) => const TransactionListScreen(),
