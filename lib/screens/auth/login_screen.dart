@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_app/config/button_custom.dart' show CustomButton;
+import 'package:my_app/screens/auth/auth_service.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:my_app/config/SocialButton.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -9,89 +11,219 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final _usernameController = TextEditingController();
+  final _passwordController = TextEditingController();
 
-  // tai khoan de Test
-  static const String testUsername = 'admin';
-  static const String testPassword = '123456';
+  bool _obscurePassword = true;
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   void _showMsg(String text) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
   }
 
-  void _onLoginPressed() {
+  void _onLoginPressed() async {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
     if (username.isEmpty || password.isEmpty) {
-      _showMsg('vui long nhap day du thong tin');
+      _showMsg('Vui lòng nhập đầy đủ thông tin');
       return;
     }
-    if (username == testUsername && password == testPassword) {
-      _showMsg('Dang nhap thanh cong');
+
+    bool success = await AuthService.login(username, password);
+
+    if (success) {
+      _showMsg('Đăng nhập thành công');
       Navigator.pushReplacementNamed(context, '/home');
     } else {
-      _showMsg('Tai khoan hoac mat khau khong dung');
+      _showMsg('Tài khoản hoặc mật khẩu không đúng');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            top: 32.0,
-            bottom: 32.0,
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                'Đăng nhập',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 32.0),
-              TextField(
-                controller: _usernameController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'Username',
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(),
-                  labelText: 'password',
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 16.0),
-              CustomButton(
-                text: 'Đăng nhập',
-                onPressed: () {
-                  _onLoginPressed(); // Thêm dấu () để gọi hàm
-                },
-              ),
-              const SizedBox(height: 16.0),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/register');
-                },
-                child: Text(
-                  'Đăng ký',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    decoration: TextDecoration.underline,
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 16.0,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Logo
+                Image.asset('imgs/logo.png', height: 140),
+                const SizedBox(height: 24),
+
+                // Tiêu đề
+                Text(
+                  "Đăng nhập",
+                  style: GoogleFonts.poppins(
+                    fontSize: 26,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 8),
+                Text(
+                  "Vui lòng nhập tên đăng nhập và mật khẩu để tiếp tục",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.black54,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 28),
+
+                // Tên đăng nhập
+                TextField(
+                  controller: _usernameController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.person_outline),
+                    hintText: "Tên đăng nhập",
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+
+                // Mật khẩu
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.lock_outline),
+                    hintText: "Mật khẩu",
+                    filled: true,
+                    fillColor: Colors.grey.shade100,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_off
+                            : Icons.visibility,
+                        color: Colors.grey,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
+                ),
+
+                // Quên mật khẩu
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {},
+                    child: const Text("Quên mật khẩu?"),
+                  ),
+                ),
+                const SizedBox(height: 8),
+
+                // Nút đăng nhập
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    onPressed: _onLoginPressed,
+                    child: const Text(
+                      "Đăng nhập",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                // Gạch ngang "Hoặc tiếp tục với"
+                Row(
+                  children: [
+                    Expanded(
+                      child: Divider(thickness: 1, color: Colors.grey.shade300),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Text(
+                        "Hoặc tiếp tục với",
+                        style: TextStyle(color: Colors.grey.shade600),
+                      ),
+                    ),
+                    Expanded(
+                      child: Divider(thickness: 1, color: Colors.grey.shade300),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+
+                // Social buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SocialButton(
+                      asset: "imgs/google.png",
+                      onTap: () {
+                        debugPrint("Google login");
+                      },
+                    ),
+                    const SizedBox(width: 16),
+                    SocialButton(
+                      asset: "imgs/facebook.png",
+                      onTap: () {
+                        debugPrint("Facebook login");
+                      },
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 28),
+
+                // Link Đăng ký
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Chưa có tài khoản? "),
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/register'),
+                      child: const Text(
+                        "Đăng ký",
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
