@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/screens/auth/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_app/config/SocialButton.dart';
+import 'package:my_app/widgets/SocialButton.dart';
+import 'package:my_app/theme/app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,8 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
     bool success = await AuthService.login(username, password);
 
     if (success) {
-      _showMsg('Đăng nhập thành công');
-      Navigator.pushReplacementNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/profile');
     } else {
       _showMsg('Tài khoản hoặc mật khẩu không đúng');
     }
@@ -143,7 +143,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.infinity,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
+                      backgroundColor: AppColors.primary,
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
