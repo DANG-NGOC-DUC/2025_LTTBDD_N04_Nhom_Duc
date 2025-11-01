@@ -189,16 +189,17 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
+
+      // FAB: dấu cộng, màu tương phản với thanh điều hướng và nền
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add');
-        },
+        onPressed: () => Navigator.pushNamed(context, '/add'),
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
-        elevation: 6,
         child: const Icon(Icons.add),
+        elevation: 6,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       bottomNavigationBar: const BottomNav(currentIndex: 0),
     );
   }

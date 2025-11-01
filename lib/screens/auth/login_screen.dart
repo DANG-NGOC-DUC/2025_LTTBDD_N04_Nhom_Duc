@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Logo
-                Image.asset('imgs/logo.png', height: 140),
+                Image.asset('assets/imgs/logo.png', height: 140),
                 const SizedBox(height: 24),
 
                 // Tiêu đề
@@ -74,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Vui lòng nhập tên đăng nhập và mật khẩu để tiếp tục",
+                  "Vui lòng nhập user: admin và pass: 123456 để đăng nhập",
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.black54,
@@ -188,14 +188,14 @@ class _LoginScreenState extends State<LoginScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     SocialButton(
-                      asset: "imgs/google.png",
+                      asset: "assets/imgs/google.png",
                       onTap: () {
                         debugPrint("Google login");
                       },
                     ),
                     const SizedBox(width: 16),
                     SocialButton(
-                      asset: "imgs/facebook.png",
+                      asset: "assets/imgs/facebook.png",
                       onTap: () {
                         debugPrint("Facebook login");
                       },
