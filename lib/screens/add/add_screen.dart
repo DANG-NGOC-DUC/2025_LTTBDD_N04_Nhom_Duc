@@ -3,6 +3,7 @@ import 'package:my_app/theme/app_colors.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:intl/intl.dart';
+import 'package:my_app/services/transaction_service.dart';
 
 class AddTransactionScreen extends StatefulWidget {
   const AddTransactionScreen({super.key});
@@ -21,9 +22,8 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
   // store category by key so it can be localized
   String _selectedCategoryKey = 'cat_food';
   DateTime _selectedDate = DateTime.now();
-
-  // sample transaction saved to a variable so home can inspect it after pop
-  Map<String, dynamic> sampleTransaction = {};
+  
+  final TransactionService _transactionService = TransactionService();
 
   final List<Map<String, dynamic>> _categories = [
     {'key': 'cat_food', 'icon': Icons.restaurant, 'color': Color(0xFFFF9800)},
@@ -63,29 +63,43 @@ class _AddTransactionScreenState extends State<AddTransactionScreen> {
       final selectedCategory =
           _categories.firstWhere((c) => c['key'] == _selectedCategoryKey);
       final transaction = {
-        'name': _nameController.text,
+        'id': DateTime.now().millisecondsSinceEpoch.toString(),
+        'name': _nameController.text.trim(),
         'amount': int.parse(_amountController.text),
         'type': _selectedType,
         'categoryKey': _selectedCategoryKey,
-        'categoryName': tr(_selectedCategoryKey), // localized display name
+        'categoryName': tr(_selectedCategoryKey),
         'date': _selectedDate,
         'icon': selectedCategory['icon'],
         'color': selectedCategory['color'],
       };
 
-      // store in sampleTransaction before popping so home can read it if needed
-      sampleTransaction = Map<String, dynamic>.from(transaction);
+      // Lưu vào TransactionService
+      _transactionService.addTransaction(transaction);
 
-      debugPrint('=== NEW TRANSACTION ===');
-      debugPrint('Name: ${transaction['name']}');
-      debugPrint('Amount: ${transaction['amount']}');
-      debugPrint('Type: ${transaction['type']}');
-      debugPrint('Category: ${transaction['categoryName']}');
-      debugPrint('Date: ${transaction['date']}');
-      debugPrint('========================');
+      // Hiển thị thông báo thành công
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.white),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text('${'transaction_added'.tr()}: ${transaction['name']}'),
+              ),
+            ],
+          ),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      );
 
-      // return the sampleTransaction to previous screen (home)
-      Navigator.pop(context, sampleTransaction);
+      // Quay về màn hình trước
+      Navigator.pop(context, true);
     }
   }
 

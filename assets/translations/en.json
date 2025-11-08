@@ -120,5 +120,9 @@
   "english": "English",
   "search": "Search",
   "more_options": "More options",
-  "transaction_added": "Transaction added"
+  "transaction_added": "Transaction added",
+  "share": "Share",
+  "category_breakdown": "Category Breakdown",
+  "no_data": "No Data",
+  "add_transaction_to_see_report": "Add transactions to see report"
 }

@@ -120,5 +120,9 @@
   "english": "English",
   "search": "Tìm kiếm",
   "more_options": "Thêm tùy chọn",
-  "transaction_added": "Đã thêm giao dịch"
+  "transaction_added": "Đã thêm giao dịch",
+  "share": "Chia sẻ",
+  "category_breakdown": "Phân tích theo danh mục",
+  "no_data": "Chưa có dữ liệu",
+  "add_transaction_to_see_report": "Thêm giao dịch để xem báo cáo"
 }

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:my_app/theme/app_colors.dart';
 import 'package:my_app/widgets/bottom_nav.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_app/services/transaction_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,13 +14,34 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final int budget = 5000000;
-  int spent = 2500000;
+  int spent = 0;
 
-  // lưu các giao dịch được thêm (trả về từ màn Add)
-  final List<Map<String, dynamic>> _transactions = [];
-
+  final TransactionService _transactionService = TransactionService();
+  
   int selectedMonthIndex = 9; // Tháng 10
   String selectedYear = '2025';
+
+  @override
+  void initState() {
+    super.initState();
+    // Lắng nghe thay đổi từ TransactionService
+    _transactionService.addListener(_updateData);
+    _updateData();
+  }
+
+  @override
+  void dispose() {
+    _transactionService.removeListener(_updateData);
+    super.dispose();
+  }
+
+  void _updateData() {
+    if (mounted) {
+      setState(() {
+        _updateCategories();
+      });
+    }
+  }
 
   // categories lưu bằng key để dễ localized bằng tr(key)
   final List<Map<String, dynamic>> categories = [
@@ -59,15 +81,18 @@ class _HomeScreenState extends State<HomeScreen> {
     return '${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}đ';
   }
 
-  // cập nhật categories và spent từ _transactions
+  // cập nhật categories và spent từ TransactionService
   void _updateCategories() {
     // reset giá trị
     for (var cat in categories) {
       cat['value'] = 0;
     }
 
-    // tổng lại từ transactions (support cả 'categoryKey' hoặc legacy 'category')
-    for (var trans in _transactions) {
+    // Lấy transactions từ service
+    final transactions = _transactionService.transactions;
+
+    // tổng lại từ transactions
+    for (var trans in transactions) {
       if (trans['type'] == 'expense') {
         final String catKey =
             trans['categoryKey'] ?? trans['category'] ?? 'cat_other';
@@ -81,7 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     // tính lại tổng spent
-    spent = _transactions
+    spent = transactions
         .where((t) => t['type'] == 'expense')
         .fold(0, (sum, t) => sum + (t['amount'] as int));
   }
@@ -215,25 +240,9 @@ class _HomeScreenState extends State<HomeScreen> {
       // FAB: dấu cộng, màu tương phản với thanh điều hướng và nền
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Đợi kết quả trả về từ AddTransactionScreen
-          final result = await Navigator.pushNamed(context, '/add');
-
-          // Nếu có dữ liệu trả về (user đã save)
-          if (result != null && result is Map<String, dynamic>) {
-            setState(() {
-              _transactions.add(result);
-              _updateCategories();
-            });
-
-            // Snackbar
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text('${tr('transaction_added')}: ${result['name']}'),
-                backgroundColor: Colors.green,
-                duration: const Duration(seconds: 2),
-              ),
-            );
-          }
+          // Điều hướng đến Add Screen
+          await Navigator.pushNamed(context, '/add');
+          // Dữ liệu đã được lưu vào TransactionService và tự động cập nhật qua listener
         },
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
