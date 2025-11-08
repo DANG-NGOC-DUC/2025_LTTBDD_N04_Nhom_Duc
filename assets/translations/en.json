@@ -13,7 +13,7 @@
   "close": "Close",
 
   "student_info": "Student Info",
-  "msv": "ID: {{id}}",
+  "msv": "Student ID",
   "name": "Name: {{name}}",
 
   "home_title": "Spending Manager",
@@ -62,5 +62,63 @@
   "dark_mode_desc": "Change interface theme",
   "language": "Language",
   "privacy_policy": "Privacy Policy",
-  "version": "Version"
+  "version": "Version",
+
+  "expense": "Expense",
+  "income": "Income",
+  "transaction_name": "Transaction name",
+  "enter_name": "Please enter a name",
+  "amount": "Amount",
+  "enter_amount": "Please enter amount",
+  "invalid_amount": "Invalid amount",
+  "category": "Category",
+  "date": "Date",
+  "save_transaction": "Save transaction",
+
+  "cat_food": "Food",
+  "cat_transport": "Transport",
+  "cat_entertainment": "Entertainment",
+  "cat_shopping": "Shopping",
+  "cat_health": "Health",
+  "cat_education": "Education",
+  "cat_other": "Other",
+
+  "filter_all": "All",
+  "status_upcoming": "Upcoming",
+
+  "cat_general": "General",
+
+  "plan_saving_oct": "October savings plan",
+  "plan_year_trip": "Year-end trip",
+  "plan_new_laptop": "New laptop",
+
+  "login_title": "Login",
+  "login_subtitle": "Please enter user: admin and pass: 123456 to login",
+  "username": "Username",
+  "password": "Password",
+  "forgot_password": "Forgot password?",
+  "login_button": "Login",
+  "continue_with": "Or continue with",
+  "no_account": "Don't have an account?",
+  "register_link": "Register",
+  "login_failed": "Invalid username or password",
+  "empty_fields": "Please fill in all fields",
+
+  "register_title": "Create Account",
+  "register_subtitle": "Please enter your information to register",
+  "confirm_password": "Confirm Password",
+  "register_button": "Register",
+  "has_account": "Already have an account?",
+  "login_link": "Login",
+  "register_failed": "Registration failed, please try again",
+  "register_success": "Registration successful, please login",
+  "password_mismatch": "Password confirmation does not match",
+
+  "student_name": "Dang Ngoc Duc",
+  "student_id": "23010803",
+  "vietnamese": "Vietnamese",
+  "english": "English",
+  "search": "Search",
+  "more_options": "More options",
+  "transaction_added": "Transaction added"
 }

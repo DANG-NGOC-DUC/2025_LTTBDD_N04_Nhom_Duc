@@ -3,6 +3,7 @@ import 'package:my_app/screens/auth/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_app/widgets/SocialButton.dart';
 import 'package:my_app/theme/app_colors.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -32,7 +33,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final username = _usernameController.text.trim();
     final password = _passwordController.text.trim();
     if (username.isEmpty || password.isEmpty) {
-      _showMsg('Vui lòng nhập đầy đủ thông tin');
+      _showMsg('empty_fields'.tr());
       return;
     }
 
@@ -41,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (success) {
       Navigator.pushReplacementNamed(context, '/profile');
     } else {
-      _showMsg('Tài khoản hoặc mật khẩu không đúng');
+      _showMsg('login_failed'.tr());
     }
   }
 
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 // Tiêu đề
                 Text(
-                  "Đăng nhập",
+                  'login_title'.tr(),
                   style: GoogleFonts.poppins(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Vui lòng nhập user: admin và pass: 123456 để đăng nhập",
+                  'login_subtitle'.tr(),
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.black54,
@@ -88,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _usernameController,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.person_outline),
-                    hintText: "Tên đăng nhập",
+                    hintText: 'username'.tr(),
                     filled: true,
                     fillColor: Colors.grey.shade100,
                     border: OutlineInputBorder(
@@ -105,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.lock_outline),
-                    hintText: "Mật khẩu",
+                    hintText: 'password'.tr(),
                     filled: true,
                     fillColor: Colors.grey.shade100,
                     border: OutlineInputBorder(
@@ -133,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   alignment: Alignment.centerRight,
                   child: TextButton(
                     onPressed: () {},
-                    child: const Text("Quên mật khẩu?"),
+                    child: Text('forgot_password'.tr()),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -151,9 +152,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     onPressed: _onLoginPressed,
-                    child: const Text(
-                      "Đăng nhập",
-                      style: TextStyle(
+                    child: Text(
+                      'login_button'.tr(),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -172,7 +173,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Text(
-                        "Hoặc tiếp tục với",
+                        'continue_with'.tr(),
                         style: TextStyle(color: Colors.grey.shade600),
                       ),
                     ),
@@ -209,12 +210,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Chưa có tài khoản? "),
+                    Text('no_account'.tr() + ' '),
                     GestureDetector(
                       onTap: () => Navigator.pushNamed(context, '/register'),
-                      child: const Text(
-                        "Đăng ký",
-                        style: TextStyle(
+                      child: Text(
+                        'register_link'.tr(),
+                        style: const TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.w600,
                         ),

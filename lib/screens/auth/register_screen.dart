@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_app/screens/auth/auth_service.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -27,11 +28,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final confirmPassword = _confirmPasswordController.text.trim();
 
     if (username.isEmpty || password.isEmpty || confirmPassword.isEmpty) {
-      _showMsg('Vui lòng nhập đầy đủ thông tin');
+      _showMsg('empty_fields'.tr());
       return;
     }
     if (password != confirmPassword) {
-      _showMsg('Mật khẩu xác nhận không khớp');
+      _showMsg('password_mismatch'.tr());
       return;
     }
 
@@ -40,10 +41,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
     debugPrint('AuthService.register returned: $success');
 
     if (success) {
-      _showMsg('Đăng ký thành công, vui lòng đăng nhập');
+      _showMsg('register_success'.tr());
       Navigator.pushReplacementNamed(context, '/login');
     } else {
-      _showMsg('Đăng ký thất bại, vui lòng thử lại');
+      _showMsg('register_failed'.tr());
     }
   }
 
@@ -62,12 +63,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Logo
-                Image.asset('imgs/logo.png', height: 120),
+                Image.asset('assets/imgs/logo.png', height: 120),
                 const SizedBox(height: 20),
 
                 // Tiêu đề
                 Text(
-                  "Tạo tài khoản",
+                  'register_title'.tr(),
                   style: GoogleFonts.poppins(
                     fontSize: 26,
                     fontWeight: FontWeight.bold,
@@ -76,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  "Vui lòng nhập thông tin để đăng ký",
+                  'register_subtitle'.tr(),
                   style: GoogleFonts.poppins(
                     fontSize: 14,
                     color: Colors.black54,
@@ -89,7 +90,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   controller: _usernameController,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.person_outline),
-                    hintText: "Tên đăng nhập",
+                    hintText: 'username'.tr(),
                     filled: true,
                     fillColor: Colors.grey.shade100,
                     border: OutlineInputBorder(
@@ -106,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: _obscurePassword,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.lock_outline),
-                    hintText: "Mật khẩu",
+                    hintText: 'password'.tr(),
                     filled: true,
                     fillColor: Colors.grey.shade100,
                     border: OutlineInputBorder(
@@ -135,7 +136,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   obscureText: _obscureConfirmPassword,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.lock_reset),
-                    hintText: "Xác nhận mật khẩu",
+                    hintText: 'confirm_password'.tr(),
                     filled: true,
                     fillColor: Colors.grey.shade100,
                     border: OutlineInputBorder(
@@ -171,9 +172,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     onPressed: _onRegisterPressed,
-                    child: const Text(
-                      "Đăng ký",
-                      style: TextStyle(
+                    child: Text(
+                      'register_button'.tr(),
+                      style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -187,13 +188,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Đã có tài khoản? "),
+                    Text('has_account'.tr() + ' '),
                     GestureDetector(
                       onTap: () =>
                           Navigator.pushReplacementNamed(context, '/login'),
-                      child: const Text(
-                        "Đăng nhập",
-                        style: TextStyle(
+                      child: Text(
+                        'login_link'.tr(),
+                        style: const TextStyle(
                           color: Colors.blueAccent,
                           fontWeight: FontWeight.w600,
                         ),

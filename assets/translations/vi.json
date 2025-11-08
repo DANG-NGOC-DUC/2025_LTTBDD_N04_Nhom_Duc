@@ -13,7 +13,7 @@
   "close": "Đóng",
 
   "student_info": "Thông tin sinh viên",
-  "msv": "MSV: {{id}}",
+  "msv": "MSV",
   "name": "Họ và tên: {{name}}",
 
   "home_title": "Quản lý chi tiêu",
@@ -62,5 +62,63 @@
   "dark_mode_desc": "Thay đổi giao diện",
   "language": "Ngôn ngữ",
   "privacy_policy": "Chính sách bảo mật",
-  "version": "Phiên bản"
+  "version": "Phiên bản",
+
+  "expense": "Chi tiêu",
+  "income": "Thu nhập",
+  "transaction_name": "Tên giao dịch",
+  "enter_name": "Vui lòng nhập tên",
+  "amount": "Số tiền",
+  "enter_amount": "Vui lòng nhập số tiền",
+  "invalid_amount": "Số tiền không hợp lệ",
+  "category": "Danh mục",
+  "date": "Ngày",
+  "save_transaction": "Lưu giao dịch",
+
+  "cat_food": "Ăn uống",
+  "cat_transport": "Đi lại",
+  "cat_entertainment": "Giải trí",
+  "cat_shopping": "Mua sắm",
+  "cat_health": "Sức khỏe",
+  "cat_education": "Giáo dục",
+  "cat_other": "Khác",
+
+  "filter_all": "Tất cả",
+  "status_upcoming": "Sắp tới",
+
+  "cat_general": "Tổng quát",
+
+  "plan_saving_oct": "Kế hoạch tiết kiệm tháng 10",
+  "plan_year_trip": "Du lịch cuối năm",
+  "plan_new_laptop": "Mua laptop mới",
+
+  "login_title": "Đăng nhập",
+  "login_subtitle": "Vui lòng nhập user: admin và pass: 123456 để đăng nhập",
+  "username": "Tên đăng nhập",
+  "password": "Mật khẩu",
+  "forgot_password": "Quên mật khẩu?",
+  "login_button": "Đăng nhập",
+  "continue_with": "Hoặc tiếp tục với",
+  "no_account": "Chưa có tài khoản?",
+  "register_link": "Đăng ký",
+  "login_failed": "Tài khoản hoặc mật khẩu không đúng",
+  "empty_fields": "Vui lòng nhập đầy đủ thông tin",
+
+  "register_title": "Tạo tài khoản",
+  "register_subtitle": "Vui lòng nhập thông tin để đăng ký",
+  "confirm_password": "Xác nhận mật khẩu",
+  "register_button": "Đăng ký",
+  "has_account": "Đã có tài khoản?",
+  "login_link": "Đăng nhập",
+  "register_failed": "Đăng ký thất bại, vui lòng thử lại",
+  "register_success": "Đăng ký thành công, vui lòng đăng nhập",
+  "password_mismatch": "Mật khẩu xác nhận không khớp",
+
+  "student_name": "Đặng Ngọc Đức",
+  "student_id": "23010803",
+  "vietnamese": "Tiếng Việt",
+  "english": "English",
+  "search": "Tìm kiếm",
+  "more_options": "Thêm tùy chọn",
+  "transaction_added": "Đã thêm giao dịch"
 }

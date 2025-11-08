@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:my_app/theme/app_colors.dart';
 import 'package:my_app/widgets/bottom_nav.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,67 +13,88 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final int budget = 5000000;
-  final int spent = 2500000;
+  int spent = 2500000;
+
+  // lưu các giao dịch được thêm (trả về từ màn Add)
+  final List<Map<String, dynamic>> _transactions = [];
 
   int selectedMonthIndex = 9; // Tháng 10
   String selectedYear = '2025';
 
+  // categories lưu bằng key để dễ localized bằng tr(key)
   final List<Map<String, dynamic>> categories = [
     {
-      "name": "Ăn uống",
+      "key": "cat_food",
       "value": 800000,
       "color": const Color(0xFFFF9800),
       "icon": Icons.restaurant,
     },
     {
-      "name": "Đi lại",
+      "key": "cat_transport",
       "value": 400000,
       "color": const Color(0xFF2196F3),
       "icon": Icons.directions_car,
     },
     {
-      "name": "Giải trí",
+      "key": "cat_entertainment",
       "value": 300000,
       "color": const Color(0xFF9C27B0),
       "icon": Icons.sports_esports,
     },
     {
-      "name": "Mua sắm",
+      "key": "cat_shopping",
       "value": 600000,
       "color": const Color(0xFFFFC107),
       "icon": Icons.shopping_bag,
     },
     {
-      "name": "Khác",
+      "key": "cat_other",
       "value": 400000,
       "color": const Color(0xFF607D8B),
       "icon": Icons.more_horiz,
     },
   ];
 
-  final List<String> months = [
-    'T1',
-    'T2',
-    'T3',
-    'T4',
-    'T5',
-    'T6',
-    'T7',
-    'T8',
-    'T9',
-    'T10',
-    'T11',
-    'T12',
-  ];
-
   String formatCurrency(int value) {
     return '${value.toString().replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')}đ';
   }
 
+  // cập nhật categories và spent từ _transactions
+  void _updateCategories() {
+    // reset giá trị
+    for (var cat in categories) {
+      cat['value'] = 0;
+    }
+
+    // tổng lại từ transactions (support cả 'categoryKey' hoặc legacy 'category')
+    for (var trans in _transactions) {
+      if (trans['type'] == 'expense') {
+        final String catKey =
+            trans['categoryKey'] ?? trans['category'] ?? 'cat_other';
+        final category = categories.firstWhere(
+          (c) => c['key'] == catKey,
+          orElse: () => categories.last,
+        );
+        category['value'] =
+            (category['value'] as int) + (trans['amount'] as int);
+      }
+    }
+
+    // tính lại tổng spent
+    spent = _transactions
+        .where((t) => t['type'] == 'expense')
+        .fold(0, (sum, t) => sum + (t['amount'] as int));
+  }
+
+  List<String> get _monthLabels => List.generate(12, (i) {
+        final idx = (i + 1).toString().padLeft(2, '0');
+        return tr('month_$idx');
+      });
+
   @override
   Widget build(BuildContext context) {
     final int remaining = (budget - spent).clamp(0, budget);
-    final double spentPercent = spent / budget;
+    final double spentPercent = budget == 0 ? 0 : spent / budget;
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
@@ -85,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
-                'Quản lý chi tiêu',
+                tr('home_title'),
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
                   fontSize: 18,
@@ -109,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Tổng ngân sách',
+                          tr('total_budget'),
                           style: GoogleFonts.poppins(
                             color: Colors.white70,
                             fontSize: 14,
@@ -165,7 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Chi tiết theo danh mục',
+                        tr('category_details'),
                         style: GoogleFonts.poppins(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
@@ -173,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       TextButton(
                         onPressed: () {},
-                        child: const Text('Xem tất cả'),
+                        child: Text(tr('see_all')),
                       ),
                     ],
                   ),
@@ -192,11 +214,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
       // FAB: dấu cộng, màu tương phản với thanh điều hướng và nền
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, '/add'),
+        onPressed: () async {
+          // Đợi kết quả trả về từ AddTransactionScreen
+          final result = await Navigator.pushNamed(context, '/add');
+
+          // Nếu có dữ liệu trả về (user đã save)
+          if (result != null && result is Map<String, dynamic>) {
+            setState(() {
+              _transactions.add(result);
+              _updateCategories();
+            });
+
+            // Snackbar
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${tr('transaction_added')}: ${result['name']}'),
+                backgroundColor: Colors.green,
+                duration: const Duration(seconds: 2),
+              ),
+            );
+          }
+        },
         backgroundColor: AppColors.secondary,
         foregroundColor: Colors.white,
-        child: const Icon(Icons.add),
         elevation: 6,
+        child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
@@ -267,7 +309,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Expanded(
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: months.length,
+              itemCount: _monthLabels.length,
               padding: const EdgeInsets.symmetric(horizontal: 8),
               itemBuilder: (context, index) {
                 bool isSelected = index == selectedMonthIndex;
@@ -284,19 +326,17 @@ class _HomeScreenState extends State<HomeScreen> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.primary
-                          : Colors.transparent,
+                      color:
+                          isSelected ? AppColors.primary : Colors.transparent,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Center(
                       child: Text(
-                        months[index],
+                        _monthLabels[index],
                         style: GoogleFonts.poppins(
                           color: isSelected ? Colors.white : Colors.grey[600],
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.w600 : FontWeight.normal,
                         ),
                       ),
                     ),
@@ -315,7 +355,7 @@ class _HomeScreenState extends State<HomeScreen> {
       children: [
         Expanded(
           child: _buildStatCard(
-            'Còn lại',
+            tr('remaining'),
             formatCurrency(remaining),
             Icons.account_balance_wallet,
             const Color(0xFF4CAF50),
@@ -325,7 +365,7 @@ class _HomeScreenState extends State<HomeScreen> {
         const SizedBox(width: 12),
         Expanded(
           child: _buildStatCard(
-            'Đã chi',
+            tr('total_expense'),
             formatCurrency(spent),
             Icons.shopping_cart,
             const Color(0xFFEF5350),
@@ -427,7 +467,9 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Tiến độ chi tiêu',
+                tr('progress', namedArgs: {
+                  'percent': ((percent * 100)).toStringAsFixed(1)
+                }),
                 style: GoogleFonts.poppins(
                   fontWeight: FontWeight.w600,
                   fontSize: 14,
@@ -466,7 +508,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
-                    'Cảnh báo: Bạn đã chi tiêu hơn 80% ngân sách!',
+                    tr('feature_in_development'), // reuse a message or add a new key if preferred
                     style: GoogleFonts.poppins(
                       fontSize: 11,
                       color: Colors.orange[700],
@@ -482,7 +524,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildCategoryCard(Map<String, dynamic> category) {
-    double percent = spent == 0 ? 0 : (category['value'] as int) / spent;
+    double percent =
+        spent == 0 ? 0 : (category['value'] as int) / (spent == 0 ? 1 : spent);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -521,7 +564,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  category['name'] as String,
+                  tr(category['key'] as String),
                   style: GoogleFonts.poppins(
                     fontWeight: FontWeight.w600,
                     fontSize: 14,

@@ -15,20 +15,11 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _notifications = true;
   bool _darkMode = false;
-  String _language = 'Tiếng Việt';
 
-  @override
-  void initState() {
-    super.initState();
-    _loadLanguage();
-  }
-
-  void _loadLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final savedLocale = prefs.getString('locale') ?? 'vi';
-    setState(() {
-      _language = savedLocale == 'vi' ? 'Tiếng Việt' : 'English';
-    });
+  String get _language {
+    return context.locale.languageCode == 'vi' 
+        ? 'vietnamese'.tr() 
+        : 'english'.tr();
   }
 
   void _confirmLogout() {
@@ -120,11 +111,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Đặng Ngọc Đức',
+                Text('student_name'.tr(),
                     style: GoogleFonts.poppins(
                         fontSize: 16, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 4),
-                Text('MSV: 23010803',
+                Text('${'msv'.tr()}: ${'student_id'.tr()}',
                     style: GoogleFonts.poppins(
                         color: Colors.grey[600], fontSize: 13)),
               ],
@@ -185,14 +176,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
-            title: const Text('Tiếng Việt'),
+            title: Text('vietnamese'.tr()),
             trailing: context.locale.languageCode == 'vi'
                 ? Icon(Icons.check, color: AppColors.primary)
                 : null,
             onTap: () => Navigator.pop(ctx, const Locale('vi')),
           ),
           ListTile(
-            title: const Text('English'),
+            title: Text('english'.tr()),
             trailing: context.locale.languageCode == 'en'
                 ? Icon(Icons.check, color: AppColors.primary)
                 : null,
@@ -208,10 +199,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       // Lưu ngôn ngữ vào SharedPreferences
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('locale', chosen.languageCode);
-
-      setState(() {
-        _language = chosen.languageCode == 'vi' ? 'Tiếng Việt' : 'English';
-      });
+      
+      // Rebuild để cập nhật UI với ngôn ngữ mới
+      if (mounted) {
+        setState(() {});
+      }
     }
   }
 

@@ -14,10 +14,10 @@ class ReportScreen extends StatefulWidget {
 
 class _ReportScreenState extends State<ReportScreen> {
   final List<Map<String, dynamic>> categories = [
-    {"name": "Ăn uống", "value": 1200000, "color": const Color(0xFFFF9800)},
-    {"name": "Đi lại", "value": 800000, "color": const Color(0xFF2196F3)},
-    {"name": "Giải trí", "value": 600000, "color": const Color(0xFF9C27B0)},
-    {"name": "Mua sắm", "value": 1400000, "color": const Color(0xFFFFC107)},
+    {"nameKey": "cat_food", "value": 1200000, "color": const Color(0xFFFF9800)},
+    {"nameKey": "cat_transport", "value": 800000, "color": const Color(0xFF2196F3)},
+    {"nameKey": "cat_entertainment", "value": 600000, "color": const Color(0xFF9C27B0)},
+    {"nameKey": "cat_shopping", "value": 1400000, "color": const Color(0xFFFFC107)},
   ];
 
   final List<String> monthsKeys = [
@@ -322,7 +322,7 @@ class _ReportScreenState extends State<ReportScreen> {
                       color: c['color'] as Color, shape: BoxShape.circle)),
               const SizedBox(width: 10),
               Expanded(
-                  child: Text(c['name'] as String,
+                  child: Text((c['nameKey'] as String).tr(),
                       style: GoogleFonts.poppins(fontSize: 13))),
               Text('${(pct * 100).toStringAsFixed(0)}%',
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
@@ -349,7 +349,7 @@ class _ReportScreenState extends State<ReportScreen> {
                   backgroundColor: c['color'] as Color,
                   child: const Icon(Icons.pie_chart,
                       color: Colors.white, size: 18)),
-              title: Text(c['name'] as String,
+              title: Text((c['nameKey'] as String).tr(),
                   style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
               subtitle: Text(formatCurrency(v),
                   style: GoogleFonts.poppins(color: Colors.grey[600])),
